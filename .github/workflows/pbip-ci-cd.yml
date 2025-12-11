@@ -221,11 +221,12 @@ jobs:
           echo "📁 Semantic model folders to promote: $sm_folders"
           echo "📁 Report folders to promote: $rpt_folders"
 
-          # Set outputs and environment variables
-          if [[ -z "${sm_folders// }" && -z "${rpt_folders// }" ]]; then
+          # Set outputs and environment variables with proper empty string handling
+          if [[ -z "$sm_folders" && -z "$rpt_folders" ]]; then
             echo "✨ No changes detected. Skipping deployment."
             echo "skip-deployment=true" >> $GITHUB_OUTPUT
-            echo "SKIP_DEPLOYMENT=true" >> $GITHUB_ENV
+            echo "semantic-models=" >> $GITHUB_OUTPUT
+            echo "reports=" >> $GITHUB_OUTPUT
           else
             echo "skip-deployment=false" >> $GITHUB_OUTPUT
             echo "semantic-models=$sm_folders" >> $GITHUB_OUTPUT
@@ -233,6 +234,11 @@ jobs:
             echo "SEMANTIC_MODEL_FOLDERS=$sm_folders" >> $GITHUB_ENV
             echo "REPORT_FOLDERS=$rpt_folders" >> $GITHUB_ENV
           fi
+          
+          # Debug output
+          echo "🔍 Debug - skip-deployment: $(if [[ -z "$sm_folders" && -z "$rpt_folders" ]]; then echo "true"; else echo "false"; fi)"
+          echo "🔍 Debug - semantic-models output: '$sm_folders'"
+          echo "🔍 Debug - reports output: '$rpt_folders'"
 
       - name: Upload validation artifacts
         if: failure()
@@ -353,7 +359,10 @@ jobs:
   deploy-reports:
     name: Deploy Reports
     needs: [validate-and-plan, deploy-semantic-models]
-    if: needs.validate-and-plan.outputs.skip-deployment != 'true' && needs.validate-and-plan.outputs.reports != ''
+    if: |
+      needs.validate-and-plan.outputs.skip-deployment != 'true' && 
+      needs.validate-and-plan.outputs.reports != '' &&
+      always()
     runs-on: ubuntu-latest
     timeout-minutes: 20
     
