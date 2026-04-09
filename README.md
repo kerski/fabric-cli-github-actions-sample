@@ -2,6 +2,18 @@
 
 This repository contains a **demo CI/CD pipeline** for Microsoft Fabric using the Fabric CLI and GitHub Actions. This example demonstrates how to automatically deploy Power BI reports and semantic models to Microsoft Fabric workspaces when changes are detected in your repository.
 
+## Table of Contents
+
+1. [Features](#features)
+2. [Prerequesites](#prerequisites)
+3. [Setup Instructions](#setup-instructions)
+4. [Workflow Overview](#workflow-overview)
+5. [Triggering the Pipeline](#triggering-the-pipeline)
+6. [Monitoring and Troubleshooting](#monitoring-and-troubleshooting)
+7. [Customization](#customization)
+8. [Security Best Practices](#security-best-practices)
+9. [Support and Contributing](#support-and-contributing)
+
 ## Features
 
 - 🚀 **Automated Deployment**: Automatically deploy semantic models and reports when changes are pushed
